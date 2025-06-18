@@ -94,7 +94,18 @@ public class QuestionServiceImpl implements QuestionService {
                 predicates.add(cb.equal(root.get("difficulty"), params.getDifficulty()));
             }
             if (params.getLanguage() != null && !params.getLanguage().isEmpty()) {
-                predicates.add(cb.equal(root.get("language"), params.getLanguage()));
+                String[] langs = params.getLanguage().split(",");
+
+                List<Predicate> langPredicates = new ArrayList<>();
+                for (String lang : langs) {
+                    String trimmed = lang.trim();
+                    if (!trimmed.isEmpty()) {
+                        langPredicates.add(cb.like(root.get("language"), "%" + trimmed + "%"));
+                    }
+                }
+                if (!langPredicates.isEmpty()) {
+                    predicates.add(cb.or(langPredicates.toArray(new Predicate[0])));
+                }
             }
             if (params.getKeyword() != null && !params.getKeyword().isEmpty()) {
                 predicates.add(cb.like(

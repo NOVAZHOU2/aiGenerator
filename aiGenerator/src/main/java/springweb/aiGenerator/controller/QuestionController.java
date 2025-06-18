@@ -104,7 +104,7 @@ public class QuestionController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
-            @RequestParam(defaultValue = "DESC") String direction) {
+            @RequestParam(defaultValue = "ASC") String direction) {
 
         QuestionQueryParams params = new QuestionQueryParams();
         params.setType(type);
