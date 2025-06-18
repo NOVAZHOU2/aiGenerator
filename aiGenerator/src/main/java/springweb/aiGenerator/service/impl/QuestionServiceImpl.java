@@ -13,7 +13,9 @@ import springweb.aiGenerator.entity.Question;
 import springweb.aiGenerator.entity.DifficultyLevel;
 import springweb.aiGenerator.entity.QuestionType;
 
+import springweb.aiGenerator.entity.User;
 import springweb.aiGenerator.repository.QuestionRepository;
+import springweb.aiGenerator.repository.UserRepository;
 import springweb.aiGenerator.service.QuestionService;
 import springweb.aiGenerator.exception.NotFoundException;
 
@@ -28,10 +30,12 @@ public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionRepository questionRepository;
 
-    public QuestionServiceImpl(QuestionRepository questionRepository) {
-        this.questionRepository = questionRepository;
-    }
+    private final UserRepository userRepository;
 
+    public QuestionServiceImpl(QuestionRepository questionRepository, UserRepository userRepository) {
+        this.questionRepository = questionRepository;
+        this.userRepository = userRepository;
+    }
     @Override
     @Transactional
     public Question createQuestion(Question question) {
@@ -123,8 +127,22 @@ public class QuestionServiceImpl implements QuestionService {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        return questionRepository.findAll(spec, pageable)
-                .map(QuestionListResponse::new);
+        Page<Question> questions = questionRepository.findAll(spec, pageable);
+
+        // 提取 userId
+        List<Long> userIds = questions.stream()
+                .map(Question::getUserId)
+                .distinct()
+                .collect(Collectors.toList());
+
+        // 批量查询用户
+        Map<Long, String> userIdToName = userRepository.findAllById(userIds).stream()
+                .collect(Collectors.toMap(User::getId, User::getName));
+
+        // 构造带 userName 的响应
+        return questions.map(q ->
+                new QuestionListResponse(q, userIdToName.getOrDefault(q.getUserId(), "未知用户"))
+        );
     }
 
     @Override

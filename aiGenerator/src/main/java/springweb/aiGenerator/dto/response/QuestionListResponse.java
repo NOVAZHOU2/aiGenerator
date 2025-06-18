@@ -19,6 +19,7 @@ public class QuestionListResponse {
     private LocalDateTime createdAt;
     private String language;
     private Long userId;
+    private String userName;
 
     public QuestionListResponse(Question question) {
         this.id = question.getId();
@@ -29,6 +30,17 @@ public class QuestionListResponse {
         this.options = question.getOptions();
         this.language = question.getLanguage();
         this.userId = question.getUserId();
+        this.userName = question.getUserName();
+    }
+
+    public QuestionListResponse(Question question, String userName) {
+        this.id = question.getId();
+        this.content = question.getContent();
+        this.type = question.getType();
+        this.difficulty = question.getDifficulty();
+        this.language = question.getLanguage();
+        this.userId = question.getUserId();
+        this.userName = userName;
     }
 
     public Long getUserId() {
@@ -93,5 +105,13 @@ public class QuestionListResponse {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

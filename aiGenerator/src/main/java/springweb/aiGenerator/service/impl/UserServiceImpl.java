@@ -44,7 +44,8 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
             throw new InvalidCredentialsException("密码错误");
         }
-
+        //删去密码信息
+        user.setPassword(null);
         return user;
     }
 

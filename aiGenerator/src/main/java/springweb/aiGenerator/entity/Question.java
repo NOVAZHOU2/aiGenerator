@@ -38,6 +38,8 @@ public class Question extends BaseEntity {
     private String language; // 编程语言
     @Column(name = "user_id", nullable = false)
     private Long userId;
+    @Transient
+    private String userName; // 用户名，非持久化字段
 
     public Long getUserId() {
         return userId;
@@ -60,10 +62,6 @@ public class Question extends BaseEntity {
     }
 
     public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setId(long id) {
         this.id = id;
     }
 
@@ -115,6 +113,14 @@ public class Question extends BaseEntity {
         this.language = language;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     @Override
     public String toString() {
         return "Question{" +
@@ -127,6 +133,7 @@ public class Question extends BaseEntity {
                 ", createdAt=" + createdAt +
                 ", language='" + language + '\'' +
                 ", userId=" + userId +
+                ", userName='" + userName + '\'' +
                 '}';
     }
 }
