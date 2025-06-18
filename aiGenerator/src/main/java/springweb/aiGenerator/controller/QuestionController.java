@@ -38,7 +38,7 @@ public class QuestionController {
 
     private static final int MAX_PAGE_SIZE = 100;
     private static final List<String> ALLOWED_SORT_FIELDS = List.of(
-            "id", "type", "difficulty", "language", "createdAt"
+            "id", "type", "difficulty", "language", "createdAt", "userId"
     );
 
     /**
@@ -101,6 +101,7 @@ public class QuestionController {
             @RequestParam(required = false) DifficultyLevel difficulty,
             @RequestParam(required = false) String language,
             @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Long userId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
@@ -112,6 +113,7 @@ public class QuestionController {
         params.setLanguage(language);
         params.setKeyword(keyword);
         params.setPage(page);
+        params.setUserId(userId);
         params.setSize(size);
         params.setSortBy(sortBy);
         params.setDirection(Sort.Direction.fromString(direction));
@@ -143,6 +145,7 @@ public class QuestionController {
         question.setAnswer(dto.getAnswer());
         question.setDifficulty(dto.getDifficulty());
         question.setLanguage(dto.getLanguage());
+        question.setUserId(dto.getUserId());
         return question;
     }
 }

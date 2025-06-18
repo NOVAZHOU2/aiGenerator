@@ -16,7 +16,7 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = true)
 
 public class Question extends BaseEntity {
-
+    @Id
     private Long id;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -36,6 +36,16 @@ public class Question extends BaseEntity {
     private LocalDateTime createdAt;
     @Column(length = 50)
     private String language; // 编程语言
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public Long getId() {
         return id;
@@ -116,6 +126,7 @@ public class Question extends BaseEntity {
                 ", difficulty=" + difficulty +
                 ", createdAt=" + createdAt +
                 ", language='" + language + '\'' +
+                ", userId=" + userId +
                 '}';
     }
 }

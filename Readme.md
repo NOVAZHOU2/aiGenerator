@@ -7,6 +7,17 @@
 
 ## 数据库设计
 
+
+### 用户表(users)
+
+| 字段名     | 类型          | 必填 | 说明                 | 示例值               |
+|------------|---------------|------|----------------------|----------------------|
+| id         | BIGINT     | 是   | 主键，自增           | 1                    |
+| name       | VARCHAR(50)   | 是   | 用户名，唯一         | "alice"             |
+| password   | VARCHAR(255)  | 是   | 密码（加密存储）     | （加密后的字符串）   |
+
+
+
 ### 题目表(questions)
 
 | 字段名     | 类型                                                    | 必填 | 说明              | 示例值               |
@@ -19,6 +30,7 @@
 | difficulty | enum('EASY', 'MEDIUM', 'HARD')                          | 否   | 难度等级          | EASY                 |
 | language   | VARCHAR(50)                                             | 否   | 编程语言/题目类别 | Java                 |
 | created_at | DATETIME                                                | 是   | 创建时间          | 2025-06-15 10:30:00  |
+| user_id    | BIGINT                                                  | 是   | 创建问题的用户    | 1                    |
 
 ### 枚举类型说明
 
@@ -57,11 +69,12 @@
 ```json
 {
   "type": "SINGLE_CHOICE",
-  "content": "在Java中，以下关于final关键字的说法哪个是正确的？",
-  "options": "A:final类不能被继承,B:final方法可以被重写,C:final变量在声明后可以重新赋值,D:final关键字可以修饰接口",
+  "content": "HTTP是无状态协议",
+  "options": "A: 真; B: 假",
   "answer": "A",
-  "difficulty": "MEDIUM",
-  "language": "Java"
+  "difficulty": "EASY",
+  "language": "计算机基础",
+  "userId":1
 }
 ```
 
@@ -72,14 +85,15 @@
     "success": true,
     "message": "操作成功",
     "data": {
-        "id": 9,
+        "id": 11,
         "type": "SINGLE_CHOICE",
         "content": "HTTP是无状态协议",
-        "options": "A:真,B:假",
+        "options": "A: 真; B: 假",
         "answer": "A",
         "difficulty": "EASY",
         "language": "计算机基础",
-        "createdAt": "2025-06-15T10:14:41"
+        "createdAt": "2025-06-18T11:20:34",
+        "userId": 1
     }
 }
 ```
@@ -93,10 +107,11 @@
 {
   "type": "SINGLE_CHOICE",
   "content": "HTTP是无状态协议",
-  "options": "A:真,B:假",
+  "options": "A: 真; B: 假",
   "answer": "A",
   "difficulty": "EASY",
-  "language": "计算机基础"
+  "language": "计算机基础",
+  "userId":3
 }
 ```
 
@@ -107,14 +122,15 @@
     "success": true,
     "message": "操作成功",
     "data": {
-        "id": 8,
+        "id": 10,
         "type": "SINGLE_CHOICE",
         "content": "HTTP是无状态协议",
-        "options": "A:真,B:假",
+        "options": "A: 真; B: 假",
         "answer": "A",
         "difficulty": "EASY",
         "language": "计算机基础",
-        "createdAt": "2025-06-15T10:11:42"
+        "createdAt": "2025-06-18T11:13:34",
+        "userId": 3
     }
 }
 ```
@@ -135,14 +151,15 @@
     "success": true,
     "message": "操作成功",
     "data": {
-        "id": 8,
+        "id": 10,
         "type": "SINGLE_CHOICE",
         "content": "HTTP是无状态协议",
-        "options": "A:真,B:假",
+        "options": "A: 真; B: 假",
         "answer": "A",
         "difficulty": "EASY",
         "language": "计算机基础",
-        "createdAt": "2025-06-15T10:11:42"
+        "createdAt": "2025-06-18T11:13:34",
+        "userId": 3
     }
 }
 ```
@@ -177,6 +194,7 @@
   - `difficulty`: 难度等级(可选)
   - `language`: 编程语言/题目类别(可选)
   - `keyword`: 题目内容关键词(大小写模糊查询)(可选)
+  - `userId`:创建者id
   - `sortBy`: 排序字段(默认createdAt)
   - `direction`: 排序方向(ASC/DESC, 默认DESC)
 - **请求体**:
@@ -190,13 +208,44 @@
 {
     "content": [
         {
+            "id": 11,
+            "type": "SINGLE_CHOICE",
+            "content": "HTTP是无状态协议",
+            "difficulty": "EASY",
+            "options": "A: 真; B: 假",
+            "createdAt": "2025-06-18T11:20:34",
+            "language": "计算机基础",
+            "userId": 1
+        },
+        {
+            "id": 10,
+            "type": "SINGLE_CHOICE",
+            "content": "HTTP是无状态协议",
+            "difficulty": "EASY",
+            "options": "A: 真; B: 假",
+            "createdAt": "2025-06-18T11:13:34",
+            "language": "计算机基础",
+            "userId": 3
+        },
+        {
+            "id": 7,
+            "type": "SINGLE_CHOICE",
+            "content": "好",
+            "difficulty": "EASY",
+            "options": "A: 真; B: 假",
+            "createdAt": "2025-06-14T21:45:57",
+            "language": "计算机基础",
+            "userId": 1
+        },
+        {
             "id": 6,
             "type": "SINGLE_CHOICE",
             "content": "https是无状态协议",
             "difficulty": "EASY",
-            "options": "A:真,B:假",
+            "options": "A: 真; B: 假",
             "createdAt": "2025-06-14T21:45:55",
-            "language": "计算机基础"
+            "language": "计算机基础",
+            "userId": 1
         }
     ],
     "pageable": {
@@ -212,7 +261,7 @@
         "unpaged": false
     },
     "last": true,
-    "totalElements": 1,
+    "totalElements": 4,
     "totalPages": 1,
     "size": 10,
     "number": 0,
@@ -222,7 +271,70 @@
         "unsorted": false
     },
     "first": true,
-    "numberOfElements": 1,
+    "numberOfElements": 4,
     "empty": false
 }
 ```
+
+#### 6. 用户注册
+- **请求方法**: POST
+- **路径**: `/users/register`  
+- **请求体**:
+```json
+{
+  "name": "用户名",
+  "password": "qwq"
+}
+```
+
+- **响应体（200 ok）**:
+
+```json
+{
+    "id": 4,
+    "name": "用户名",
+    "password": "$2a$10$cZjDIVgNYebUc6.3X838EO5NBKhs6tRqxNGSgcUdsnfbNGanIimXm"
+}
+```
+
+#### 7. 用户登录
+- **请求方法**: POST
+- **路径**: `/users/login`  
+- **请求体**:
+```json
+{
+  "name": "用户名",
+  "password": "qwq"
+}
+```
+
+- **响应体（200 ok）**:
+
+```json
+{
+    "id": 4,
+    "name": "用户名",
+    "password": "$2a$10$cZjDIVgNYebUc6.3X838EO5NBKhs6tRqxNGSgcUdsnfbNGanIimXm"
+}
+```
+
+#### 8. 修改密码
+
+- **请求方法**: POST
+- **路径**: `/users/change-password`  
+- **请求体**:
+
+```json
+{
+  "username": "用户名1",
+  "oldPassword": "qwq",
+  "newPassword": "qwqwq"
+}
+```
+
+- **响应体（200 ok）**:
+
+```json
+无
+```
+

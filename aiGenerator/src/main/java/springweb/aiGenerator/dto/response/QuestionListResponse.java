@@ -1,5 +1,6 @@
 package springweb.aiGenerator.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import springweb.aiGenerator.entity.DifficultyLevel;
 import springweb.aiGenerator.entity.Question;
@@ -14,8 +15,10 @@ public class QuestionListResponse {
     private String content;
     private DifficultyLevel difficulty;
     private String options; // 添加options字段
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
     private String language;
+    private Long userId;
 
     public QuestionListResponse(Question question) {
         this.id = question.getId();
@@ -25,6 +28,15 @@ public class QuestionListResponse {
         this.createdAt = question.getCreatedAt();
         this.options = question.getOptions();
         this.language = question.getLanguage();
+        this.userId = question.getUserId();
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getOptions() {

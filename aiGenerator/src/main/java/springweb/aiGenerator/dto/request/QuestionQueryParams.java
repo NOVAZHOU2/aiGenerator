@@ -13,6 +13,7 @@ public class QuestionQueryParams {
     private DifficultyLevel difficulty;
     private String language;
     private String keyword;
+    private Long userId;
     private int page = 0;
     private int size = 10;
     private String sortBy = "createdAt";
@@ -38,6 +39,14 @@ public class QuestionQueryParams {
                 difficulty == null &&
                 (language == null || language.isEmpty()) &&
                 (keyword == null || keyword.isEmpty());
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public QuestionType getType() {

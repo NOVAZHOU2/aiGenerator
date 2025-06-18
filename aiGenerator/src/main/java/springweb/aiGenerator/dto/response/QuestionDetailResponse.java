@@ -24,6 +24,7 @@ public class QuestionDetailResponse {
     private String language;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
+    private Long userId;
 
     public QuestionDetailResponse(Question question) {
         this.id = question.getId();
@@ -34,6 +35,7 @@ public class QuestionDetailResponse {
         this.difficulty = question.getDifficulty();
         this.language = question.getLanguage();
         this.createdAt = question.getCreatedAt();
+        this.userId = question.getUserId();
     }
     public QuestionDetailResponse() {}
     private List<String> convertOptions(String optionsJson) {
@@ -43,6 +45,14 @@ public class QuestionDetailResponse {
         } catch (JsonProcessingException e) {
             return Collections.emptyList();
         }
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getId() {

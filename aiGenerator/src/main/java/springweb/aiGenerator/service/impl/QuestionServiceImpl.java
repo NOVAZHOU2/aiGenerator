@@ -63,7 +63,9 @@ public class QuestionServiceImpl implements QuestionService {
         if (questionDetails.getLanguage() != null) {
             question.setLanguage(questionDetails.getLanguage());
         }
-
+        if (questionDetails.getUserId() != null) {
+            question.setUserId(questionDetails.getUserId());
+        }
         return questionRepository.save(question);
     }
 
@@ -74,19 +76,24 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
 
+    // ================ 可选增强：在现有搜索中支持用户ID过滤 ================
     @Override
     public Page<QuestionListResponse> searchQuestions(QuestionQueryParams params) {
-        // 构建分页和排序
         PageRequest pageable = PageRequest.of(
                 params.getPage(),
                 params.getSize(),
                 Sort.by(params.getDirection(), params.getSortBy())
         );
 
-        // 构建查询条件
         Specification<Question> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
+            // 新增：用户ID过滤条件
+            if (params.getUserId() != null) {
+                predicates.add(cb.equal(root.get("userId"), params.getUserId()));
+            }
+
+            // 原有过滤条件
             if (params.getType() != null) {
                 predicates.add(cb.equal(root.get("type"), params.getType()));
             }
@@ -106,7 +113,6 @@ public class QuestionServiceImpl implements QuestionService {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        // 执行查询并转换
         return questionRepository.findAll(spec, pageable)
                 .map(QuestionListResponse::new);
     }

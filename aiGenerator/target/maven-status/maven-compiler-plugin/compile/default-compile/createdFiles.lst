@@ -1,0 +1,5 @@
+com\example\demo\config\CorsConfig$1.class
+springweb\aiGenerator\config\JacksonConfig.class
+springweb\aiGenerator\AiGeneratorApplication.class
+springweb\aiGenerator\config\JpaConfig.class
+com\example\demo\config\CorsConfig.class

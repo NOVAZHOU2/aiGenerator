@@ -13,6 +13,7 @@ public class QuestionSearchRequest {
     private DifficultyLevel difficulty;
     private String language;
     private String keyword;
+    private Long userId;
 
     // 分页信息
     private int page = 0;
